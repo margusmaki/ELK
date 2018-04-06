@@ -16,14 +16,34 @@ NELK Installation Script (Elasticsearch, Logstash, Kibana & Nginx)
 * Hostname
 * Hosts file
 
-#### ELK Server install ####
+#### ELK Server install Github ####
 
-* Github:
+* Github git:
 * apt-get install -y git
-* git clone https://gist.github.com/margusmaki/c16f9dcaade7a12d7cf6adfc85a7f017
-* cp c16f9dcaade7a12d7cf6adfc85a7f017/ELK-install.sh .
+* git clone https://github.com/margusmaki/ELK
+* cp ELK/ELK-install.sh .
 * chmod +x ELK-install.sh
-* rm -rf c16f9dcaade7a12d7cf6adfc85a7f017
+* rm -rf ELK
+* ./ELK-install.sh
+*
+* Github cURL
+* curl -O https://raw.githubusercontent.com/margusmaki/ELK/master/ELK-install.sh
+* chmod +x ELK-install.sh
+* ./ELK-install.sh
+
+#### ELK Server install Bitbucket ####
+
+* Bitbucket git:
+* apt-get install -y git
+* git clone https://margusmaki@bitbucket.org/margusmaki/ELK.git
+* cp ELK/ELK-install.sh .
+* chmod +x ELK-install.sh
+* rm -rf ELK
+* ./ELK-install.sh
+*
+* Bitbucket cURL
+* curl -O https://raw.githubusercontent.com/margusmaki/ELK/master/ELK-install.sh
+* chmod +x ELK-install.sh
 * ./ELK-install.sh
 
 #### ELK Client install ####
@@ -40,9 +60,13 @@ NELK Installation Script (Elasticsearch, Logstash, Kibana & Nginx)
 * Editing or copy-paste etc in Windows can add some aliens to your code
 * To check code: cat -v -e filename.sh
 * To remove hidden windows characters from files: dos2unix filename.sh
-* or
-* sed 's/\r//' filename.sh > otherfilename.sh
+* Or: sed 's/\r//' filename.sh > otherfilename.sh
+* Or commit with normal client (GitKraken or SourceTree)
 
 ### Who do I talk to? ###
 
 * margus
+
+### Credits ###
+* Original Fork Credits to sniper7kills/ELK-install.sh 
+* Credits for some coding tips to silentbreaksec/helk-installer.sh
