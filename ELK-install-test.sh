@@ -8,8 +8,8 @@ echo "* Your System:		" $(cat /etc/issue.net)
 echo "******************************************************************"
 
 #Ask some info
-#echo "Enter ELK Server IP or FQDN:"
-#read eip
+echo "Enter ELK Server IP or FQDN:"
+read eip
 echo "Create credentials for ELK web access:"
 read -p 'Username: ' nginxUsername
 #Hide password -s
@@ -42,10 +42,21 @@ sudo apt-get install -y apt-transport-https
 echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
 sudo apt-get update
 
+#Trust self-signed cert by IP as CA
+#insert after by name
+sed -i "/ v3_ca /a subjectAltName = IP: $eip" /etc/ssl/openssl.cnf
+#insert after by line number
+# sed -i '226s/.*/subjectAltName = IP: '"$eip"'/' /etc/ssl/openssl.cnf
+#Generate SSL Certificates
+sudo mkdir -p /etc/pki/tls/certs
+sudo mkdir /etc/pki/tls/private
+cd /etc/pki/tls; sudo openssl req -subj '/CN='$eip'/' -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout private/ELK-Stack.key -out certs/ELK-Stack.crt
+
 #ElasticSearch
 sudo apt-get install -y elasticsearch
 cp /etc/elasticsearch/elasticsearch.yml /etc/elasticsearch/backup_elasticsearch.yml
-echo "network.host: 0.0.0.0" | sudo tee /etc/elasticsearch/elasticsearch.yml
+#echo "network.host: 0.0.0.0" | sudo tee /etc/elasticsearch/elasticsearch.yml
+sed -i 's/#network.host.*/network.host: localhost/g' /etc/elasticsearch/elasticsearch.yml
 sudo systemctl daemon-reload
 sudo systemctl enable elasticsearch.service
 sudo systemctl start elasticsearch.service
@@ -65,16 +76,6 @@ EOC
 sudo systemctl daemon-reload
 sudo systemctl enable kibana.service
 sudo systemctl start kibana.service
-
-#Trust self-signed cert by IP as CA
-#insert after by name
-sed -i "/ v3_ca /a subjectAltName = IP: $eip" /etc/ssl/openssl.cnf
-#insert after by line number
-# sed -i '226s/.*/subjectAltName = IP: '"$eip"'/' /etc/ssl/openssl.cnf
-#Generate SSL Certificates
-sudo mkdir -p /etc/pki/tls/certs
-sudo mkdir /etc/pki/tls/private
-cd /etc/pki/tls; sudo openssl req -subj '/CN='$eip'/' -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout private/ELK-Stack.key -out certs/ELK-Stack.crt
 
 #NGINX SSL Reverse Proxy
 sudo apt-get -y install nginx apache2-utils
