@@ -39,7 +39,7 @@ sudo apt-get install -y oracle-java8-installer
 #Add Repo Info
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 sudo apt-get install -y apt-transport-https
-echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
+echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-5.x.list
 sudo apt-get update
 
 #ElasticSearch
@@ -49,6 +49,9 @@ echo "network.host: localhost" | sudo tee /etc/elasticsearch/elasticsearch.yml
 sudo systemctl daemon-reload
 sudo systemctl enable elasticsearch.service
 sudo systemctl restart elasticsearch.service
+#Ubuntu 16.04 with Elasticsearch 6.x dont start daemon
+#sudo sed -i 's/#START_DAEMON/START_DAEMON/' /etc/default/elasticsearch
+#sudo systemctl restart elasticsearch
 sudo apt-get update
 
 #Kibana
@@ -221,8 +224,8 @@ exit
 EOC
 sudo systemctl daemon-reload
 sudo systemctl enable packetbeat.service
-sudo packetbeat export template > /etc/packetbeat/packetbeat.template.json
-sudo packetbeat setup --dashboards
+curl -XPUT 'http://localhost:9200/_template/packetbeat' -d@/etc/packetbeat/packetbeat.template.json
+sudo /usr/share/packetbeat/scripts/import_dashboards
 
 #Metricbeat
 sudo apt-get install -y metricbeat
@@ -251,8 +254,8 @@ exit
 EOC
 sudo systemctl daemon-reload
 sudo systemctl enable metricbeat.service
-sudo metricbeat export template > /etc/metricbeat/metricbeat.template.json
-sudo metricbeat setup --dashboards
+curl -XPUT 'http://localhost:9200/_template/metricbeat' -d@/etc/metricbeat/metricbeat.template.json
+sudo /usr/share/metricbeat/scripts/import_dashboards
 
 #Filebeat
 sudo apt-get install -y filebeat
@@ -273,8 +276,8 @@ exit
 EOC
 sudo systemctl daemon-reload
 sudo systemctl enable filebeat.service
-sudo filebeat export template > /etc/filebeat/filebeat.template.json
-sudo filebeat setup --dashboards
+curl -XPUT 'http://localhost:9200/_template/filebeat' -d@/etc/filebeat/filebeat.template.json
+sudo /usr/share/filebeat/scripts/import_dashboards
 
 sudo systemctl restart filebeat
 sudo systemctl restart metricbeat
@@ -290,7 +293,7 @@ sudo apt-get upgrade -y
 #Add Repo Info
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 sudo apt-get install apt-transport-https
-echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
+echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-5.x.list
 sudo apt-get update
 #CERT
 sudo mkdir -p /etc/pki/tls/certs
