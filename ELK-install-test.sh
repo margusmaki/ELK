@@ -48,7 +48,7 @@ cp /etc/elasticsearch/elasticsearch.yml /etc/elasticsearch/backup_elasticsearch.
 echo "network.host: 0.0.0.0" | sudo tee /etc/elasticsearch/elasticsearch.yml
 sudo systemctl daemon-reload
 sudo systemctl enable elasticsearch.service
-sudo systemctl restart elasticsearch.service
+sudo systemctl start elasticsearch.service
 sudo apt-get update
 
 #Kibana
@@ -62,7 +62,7 @@ exit
 EOC
 sudo systemctl daemon-reload
 sudo systemctl enable kibana.service
-sudo systemctl restart kibana.service
+sudo systemctl start kibana.service
 
 #Trust self-signed cert by IP as CA
 #insert after by name
@@ -180,6 +180,7 @@ sudo systemctl daemon-reload
 sudo /usr/share/logstash/bin/logstash-plugin install logstash-input-beats
 sudo systemctl enable logstash.service
 sudo systemctl restart logstash.service
+sleep 5h
 
 #Packetbeat
 sudo apt-get install -y packetbeat
