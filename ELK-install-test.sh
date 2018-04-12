@@ -56,13 +56,11 @@ cd /etc/pki/tls; sudo openssl req -subj '/CN='$eip'/' -x509 -days 3650 -batch -n
 sudo apt-get install -y elasticsearch
 cp /etc/elasticsearch/elasticsearch.yml /etc/elasticsearch/backup_elasticsearch.yml
 #echo "network.host: 0.0.0.0" | sudo tee /etc/elasticsearch/elasticsearch.yml
-sed -i 's/#network.host.*/network.host: localhost/g' /etc/elasticsearch/elasticsearch.yml
+sed -i 's/#network.host.*/network.host: 0.0.0.0/g' /etc/elasticsearch/elasticsearch.yml
 sudo systemctl daemon-reload
 sudo systemctl enable elasticsearch.service
 sudo systemctl start elasticsearch.service
 sudo apt-get update
-
-sleep 5h
 
 #Kibana
 sudo apt-get install -y kibana
