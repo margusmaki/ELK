@@ -8,8 +8,8 @@ echo "* Your System:		" $(cat /etc/issue.net)
 echo "******************************************************************"
 
 #Ask some info
-echo "Enter ELK Server IP or FQDN:"
-read eip
+#echo "Enter ELK Server IP or FQDN:"
+#read eip
 echo "Create credentials for ELK web access:"
 read -p 'Username: ' nginxUsername
 #Hide password -s
@@ -50,6 +50,8 @@ sudo systemctl daemon-reload
 sudo systemctl enable elasticsearch.service
 sudo systemctl start elasticsearch.service
 sudo apt-get update
+
+sleep 5h
 
 #Kibana
 sudo apt-get install -y kibana
@@ -107,7 +109,6 @@ EOT
 exit
 EOC
 sudo systemctl restart nginx
-sleep 5h
 
 #Logstash
 sudo apt-get install -y logstash
