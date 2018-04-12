@@ -107,6 +107,7 @@ EOT
 exit
 EOC
 sudo systemctl restart nginx
+sleep 5h
 
 #Logstash
 sudo apt-get install -y logstash
@@ -180,7 +181,6 @@ sudo systemctl daemon-reload
 sudo /usr/share/logstash/bin/logstash-plugin install logstash-input-beats
 sudo systemctl enable logstash.service
 sudo systemctl restart logstash.service
-sleep 5h
 
 #Packetbeat
 sudo apt-get install -y packetbeat
