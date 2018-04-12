@@ -39,7 +39,7 @@ sudo apt-get install -y oracle-java8-installer
 #Add Repo Info
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 sudo apt-get install -y apt-transport-https
-echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-5.x.list
+echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
 sudo apt-get update
 
 #ElasticSearch
@@ -49,9 +49,6 @@ echo "network.host: localhost" | sudo tee /etc/elasticsearch/elasticsearch.yml
 sudo systemctl daemon-reload
 sudo systemctl enable elasticsearch.service
 sudo systemctl restart elasticsearch.service
-#Ubuntu 16.04 with Elasticsearch 6.x dont start daemon
-#sudo sed -i 's/#START_DAEMON/START_DAEMON/' /etc/default/elasticsearch
-#sudo systemctl restart elasticsearch
 sudo apt-get update
 
 #Kibana
@@ -69,13 +66,14 @@ sudo systemctl restart kibana.service
 
 #Trust self-signed cert by IP as CA
 #insert after by name
-sed -i "/ v3_ca /a subjectAltName = IP: $eip" /etc/ssl/openssl.cnf
+# sed -i "/ v3_ca /a subjectAltName = IP: $eip" /etc/ssl/openssl.cnf
 #insert after by line number
 # sed -i '226s/.*/subjectAltName = IP: '"$eip"'/' /etc/ssl/openssl.cnf
 #Generate SSL Certificates
-sudo mkdir -p /etc/pki/tls/certs
-sudo mkdir /etc/pki/tls/private
-cd /etc/pki/tls; sudo openssl req -subj '/CN='$eip'/' -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout private/ELK-Stack.key -out certs/ELK-Stack.crt
+# sudo mkdir -p /etc/pki/tls/certs
+# sudo mkdir /etc/pki/tls/private
+# cd /etc/pki/tls; sudo openssl req -subj '/CN='$eip'/' -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout private/ELK-Stack.key -out certs/ELK-Stack.crt
+
 #NGINX SSL Reverse Proxy
 sudo apt-get -y install nginx apache2-utils
 sudo touch /etc/nginx/htpasswd.users
@@ -224,8 +222,8 @@ exit
 EOC
 sudo systemctl daemon-reload
 sudo systemctl enable packetbeat.service
-curl -XPUT 'http://localhost:9200/_template/packetbeat' -d@/etc/packetbeat/packetbeat.template.json
-sudo /usr/share/packetbeat/scripts/import_dashboards
+sudo packetbeat export template > /etc/packetbeat/packetbeat.template.json
+sudo packetbeat setup --dashboards
 
 #Metricbeat
 sudo apt-get install -y metricbeat
@@ -254,8 +252,8 @@ exit
 EOC
 sudo systemctl daemon-reload
 sudo systemctl enable metricbeat.service
-curl -XPUT 'http://localhost:9200/_template/metricbeat' -d@/etc/metricbeat/metricbeat.template.json
-sudo /usr/share/metricbeat/scripts/import_dashboards
+sudo metricbeat export template > /etc/metricbeat/metricbeat.template.json
+sudo metricbeat setup --dashboards
 
 #Filebeat
 sudo apt-get install -y filebeat
@@ -276,8 +274,8 @@ exit
 EOC
 sudo systemctl daemon-reload
 sudo systemctl enable filebeat.service
-curl -XPUT 'http://localhost:9200/_template/filebeat' -d@/etc/filebeat/filebeat.template.json
-sudo /usr/share/filebeat/scripts/import_dashboards
+sudo filebeat export template > /etc/filebeat/filebeat.template.json
+sudo filebeat setup --dashboards
 
 sudo systemctl restart filebeat
 sudo systemctl restart metricbeat
@@ -293,7 +291,7 @@ sudo apt-get upgrade -y
 #Add Repo Info
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 sudo apt-get install apt-transport-https
-echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-5.x.list
+echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list
 sudo apt-get update
 #CERT
 sudo mkdir -p /etc/pki/tls/certs

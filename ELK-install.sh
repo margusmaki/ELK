@@ -68,10 +68,7 @@ sudo systemctl enable kibana.service
 sudo systemctl restart kibana.service
 
 #Trust self-signed cert by IP as CA
-#insert after by name
-sed -i "/ v3_ca /a subjectAltName = IP: $eip" /etc/ssl/openssl.cnf
-#insert after by line number
-# sed -i '226s/.*/subjectAltName = IP: '"$eip"'/' /etc/ssl/openssl.cnf
+sed -i '226s/.*/subjectAltName = IP: '"$eip"'/' /etc/ssl/openssl.cnf
 #Generate SSL Certificates
 sudo mkdir -p /etc/pki/tls/certs
 sudo mkdir /etc/pki/tls/private
@@ -403,18 +400,18 @@ echo "Login ELK Server:" https://$eip
 echo "Username:" $nginxUsername
 echo "Password:" $passvar1
 echo "******************************************************************"
-echo "SSL cert:" /etc/pki/tls/certs/ELK-Stack.crt
-echo "Elasticsearch: /etc/elasticsearch/elasticsearch.yml
-echo "Kibana: /etc/kibana/kibana.yml
-echo "Logstash:" /etc/logstash/logstash.conf
-echo "Logstash:" /etc/logstash/conf.d/02-beats-input.conf
-echo "Logstash:" /etc/logstash/conf.d/10-syslog-filter.conf
-echo "Logstash:" /etc/logstash/conf.d/11-syslog-apache.conf
-echo "Logstash:" /etc/logstash/conf.d/30-elasticsearch-output.conf
-echo "Packetbeat:" /etc/packetbeat/packetbeat.yml
-echo "Metricbeat:" /etc/metricbeat/metricbeat.yml
-echo "Filebeat:" /etc/filebeat/filebeat.yml
-echo "Nginx:" /etc/nginx/sites-available/default
+echo "SSL cert: etc/pki/tls/certs/ELK-Stack.crt"
+echo "Elasticsearch: /etc/elasticsearch/elasticsearch.yml"
+echo "Kibana: /etc/kibana/kibana.yml"
+echo "Logstash: /etc/logstash/logstash.conf"
+echo "Logstash: /etc/logstash/conf.d/02-beats-input.conf"
+echo "Logstash: /etc/logstash/conf.d/10-syslog-filter.conf"
+echo "Logstash: /etc/logstash/conf.d/11-syslog-apache.conf"
+echo "Logstash: /etc/logstash/conf.d/30-elasticsearch-output.conf"
+echo "Packetbeat: /etc/packetbeat/packetbeat.yml"
+echo "Metricbeat: /etc/metricbeat/metricbeat.yml"
+echo "Filebeat: /etc/filebeat/filebeat.yml"
+echo "Nginx: /etc/nginx/sites-available/default"
 echo "******************************************************************"
 echo "ELK-client-install.sh"
 echo "scp ELK-client-install.sh user@clientIP:/home/client"

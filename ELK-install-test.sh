@@ -45,7 +45,7 @@ sudo apt-get update
 #ElasticSearch
 sudo apt-get install -y elasticsearch
 cp /etc/elasticsearch/elasticsearch.yml /etc/elasticsearch/backup_elasticsearch.yml
-echo "network.host: localhost" | sudo tee /etc/elasticsearch/elasticsearch.yml
+echo "network.host: 0.0.0.0" | sudo tee /etc/elasticsearch/elasticsearch.yml
 sudo systemctl daemon-reload
 sudo systemctl enable elasticsearch.service
 sudo systemctl restart elasticsearch.service
@@ -73,6 +73,7 @@ sed -i "/ v3_ca /a subjectAltName = IP: $eip" /etc/ssl/openssl.cnf
 sudo mkdir -p /etc/pki/tls/certs
 sudo mkdir /etc/pki/tls/private
 cd /etc/pki/tls; sudo openssl req -subj '/CN='$eip'/' -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout private/ELK-Stack.key -out certs/ELK-Stack.crt
+
 #NGINX SSL Reverse Proxy
 sudo apt-get -y install nginx apache2-utils
 sudo touch /etc/nginx/htpasswd.users
