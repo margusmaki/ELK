@@ -42,7 +42,7 @@ NELK Installation Script (Elasticsearch, Logstash, Kibana & Nginx)
 * chmod +x ELK-install.sh
 * rm -rf ELK
 * ./ELK-install.sh
-
+*
 * Bitbucket cURL
 * curl -O https://raw.githubusercontent.com/margusmaki/ELK/master/ELK-install.sh
 * chmod +x ELK-install.sh
