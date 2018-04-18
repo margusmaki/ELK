@@ -1,4 +1,5 @@
 #/bin/bash
+#elastic-5.x
 #Show primary IP & FQDN
 clear
 echo "******************************************************************"
@@ -45,13 +46,11 @@ sudo apt-get update
 #ElasticSearch
 sudo apt-get install -y elasticsearch
 cp /etc/elasticsearch/elasticsearch.yml /etc/elasticsearch/backup_elasticsearch.yml
-echo "network.host: localhost" | sudo tee /etc/elasticsearch/elasticsearch.yml
+echo "network.host: 0.0.0.0" | sudo tee /etc/elasticsearch/elasticsearch.yml
+#sed -i 's/#network.host.*/network.host: 0.0.0.0/g' /etc/elasticsearch/elasticsearch.yml
 sudo systemctl daemon-reload
 sudo systemctl enable elasticsearch.service
 sudo systemctl restart elasticsearch.service
-#Ubuntu 16.04 with Elasticsearch 6.x dont start daemon
-#sudo sed -i 's/#START_DAEMON/START_DAEMON/' /etc/default/elasticsearch
-#sudo systemctl restart elasticsearch
 sudo apt-get update
 
 #Kibana
@@ -73,6 +72,7 @@ sed -i '226s/.*/subjectAltName = IP: '"$eip"'/' /etc/ssl/openssl.cnf
 sudo mkdir -p /etc/pki/tls/certs
 sudo mkdir /etc/pki/tls/private
 cd /etc/pki/tls; sudo openssl req -subj '/CN='$eip'/' -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout private/ELK-Stack.key -out certs/ELK-Stack.crt
+
 #NGINX SSL Reverse Proxy
 sudo apt-get -y install nginx apache2-utils
 sudo touch /etc/nginx/htpasswd.users

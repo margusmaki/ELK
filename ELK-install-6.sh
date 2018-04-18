@@ -1,4 +1,5 @@
 #/bin/bash
+#elastic-6.x
 #Show primary IP & FQDN
 clear
 echo "******************************************************************"
