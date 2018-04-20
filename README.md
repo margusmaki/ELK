@@ -6,7 +6,8 @@ NELK Installation Script (Elasticsearch, Logstash, Kibana & Nginx)
 
 * This script installs and configures every single component of the ELK Stack, Beats, Certificates, Nginx SSL Reverse Proxy and creates pre-configured Client side automated install file.
 * Consists of 2 releases, Elasticsearch 5 and 6.
-* ELK-install.sh (with elastic-6.x) & ELK-install-5.sh (with elastic-5.x)
+* ELK-install.sh (with elastic-6.x) & ELK-install-5.sh (with elastic-5.x) + (Packetbeat, Metricbeat, Filebeat)
+* ELK-install-x.sh (X-Pack with elastic-6.x + Packetbeat, Metricbeat, Filebeat, Auditbeat)
 * Tested on Ubuntu 16.04.04 LTS
 * Version: 0.1
 
