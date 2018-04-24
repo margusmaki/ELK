@@ -8,6 +8,12 @@ echo "* Your FQDN:		" $(hostname -A)
 echo "* Your System:		" $(cat /etc/issue.net)
 echo "******************************************************************"
 
+workingdir=$(pwd)
+if [[ ! $EUID -eq 0 ]]; then
+    exec sudo $0 $@ || echo "ELK Installation must be run as root user"
+    exit 1 # Fail Sudo
+fi
+
 #Ask some info
 echo "Enter ELK Server IP or FQDN:"
 read eip
