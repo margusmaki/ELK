@@ -28,6 +28,19 @@ while true; do
     echo "Passwords do not match..."
 done
 
+#Ask ftp info
+echo "Create credentials for SFPT access:"
+read -p 'Username: ' ftpUsername
+#Hide password -s
+while true; do
+    read -sp 'Password: ' ftppass1
+    echo
+    read -sp 'Verify Password: ' ftppass2
+    echo
+    [ "$ftppass1" == "$ftppass2" ] && break
+    echo "Passwords do not match..."
+done
+
 #Update System
 sudo apt-get update
 sudo apt-get upgrade -y
@@ -107,12 +120,12 @@ EOT
 exit
 EOC
 
-sudo addgroup $nginxUsername
-sudo useradd -m -p $passvar1 -s /bin/false $nginxUsername
-sudo usermod --home /var/www/html $nginxUsername
+sudo useradd -m -p $ftppass1 -s /bin/false $ftpUsername
+
+sudo usermod --home /var/www/html $ftpUsername
 sudo chown nobody:nogroup /var/www
 sudo chmod a-w /var/www
-sudo chown $nginxUsername:$nginxUsername /var/www/html
+sudo chown $ftpUsername:$ftpUsername /var/www/html
 
 sudo systemctl restart vsftpd
 
@@ -128,6 +141,6 @@ echo "Nginx:" /etc/nginx/sites-available/default
 echo "FTP:" /etc/vsftpd.conf
 echo "******************************************************************"
 echo "SFTP Server:" $eip
-echo "Username:" $nginxUsername
-echo "Password:" $passvar1
+echo "Username:" $ftpUsername
+echo "Password:" $ftppass1
 echo "******************************************************************"
