@@ -120,7 +120,8 @@ EOT
 exit
 EOC
 
-sudo useradd -m -p $ftppass1 -s /bin/false $ftpUsername
+sudo useradd -m -p $ftppass1 -s /bin/bash $ftpUsername
+echo $ftpUsername:$ftppass1 | sudo chpasswd
 
 sudo usermod --home /var/www/html $ftpUsername
 sudo chown nobody:nogroup /var/www
