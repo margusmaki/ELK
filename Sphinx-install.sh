@@ -16,7 +16,7 @@ fi
 #Ask some info
 echo "Enter Docs Server IP or FQDN:"
 read eip
-echo "Create credentials for Docs web access:"
+echo "Create credentials for web access:"
 read -p 'Username: ' nginxUsername
 #Hide password -s
 while true; do
