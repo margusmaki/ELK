@@ -9,14 +9,14 @@ echo "******************************************************************"
 
 workingdir=$(pwd)
 if [[ ! $EUID -eq 0 ]]; then
-    exec sudo $0 $@ || echo "Sphinx installation must be run as root user"
+    exec sudo $0 $@ || echo "Server installation must be run as root user"
     exit 1 # Fail Sudo
 fi
 
 #Ask some info
-echo "Enter Sphinx Server IP or FQDN:"
+echo "Enter Docs Server IP or FQDN:"
 read eip
-echo "Create credentials for Sphinx web access:"
+echo "Create credentials for Docs web access:"
 read -p 'Username: ' nginxUsername
 #Hide password -s
 while true; do
@@ -25,6 +25,19 @@ while true; do
     read -sp 'Verify Password: ' passvar2
     echo
     [ "$passvar1" == "$passvar2" ] && break
+    echo "Passwords do not match..."
+done
+
+#Ask ftp info
+echo "Create credentials for SFPT access:"
+read -p 'Username: ' ftpUsername
+#Hide password -s
+while true; do
+    read -sp 'Password: ' ftppass1
+    echo
+    read -sp 'Verify Password: ' ftppass2
+    echo
+    [ "$ftppass1" == "$ftppass2" ] && break
     echo "Passwords do not match..."
 done
 
@@ -61,7 +74,7 @@ server {
         ssl_session_cache shared:SSL:10m;
         auth_basic "Restricted Access";
         auth_basic_user_file /etc/nginx/htpasswd.users;
-        root /var/www/project;
+        root /var/www/html;
         index index.html index.htm;
         location / {
             try_files \\\$uri \\\$uri/ =404;
@@ -77,17 +90,57 @@ server {
 EOT
 exit
 EOC
+
+rm /var/www/html/index.nginx-debian.html
 sudo systemctl stop nginx.service
 sudo systemctl start nginx.service
 sudo systemctl enable nginx.service
 
+sudo apt-get install -y vsftpd
+cp /etc/vsftpd.conf /etc/vsftpd.conf.orig
+cat <<EOC | sudo su
+cat <<EOT > /etc/vsftpd.conf
+anonymous_enable=NO
+local_enable=YES
+write_enable=YES
+local_umask=022
+dirmessage_enable=YES
+xferlog_enable=YES
+connect_from_port_20=NO
+xferlog_file=/var/log/vsftpd.log
+xferlog_std_format=YES
+ftpd_banner=Welcome to our FTP
+listen=YES
+pam_service_name
+ascii_upload_enable=YES
+ascii_download_enable=YES
+use_localtime=YES
+chroot_local_user=YES
+EOT
+exit
+EOC
+
+sudo addgroup $ftpUsername
+sudo useradd -m -p $ftppass1 -s /bin/false $ftpUsername
+sudo usermod --home /var/www/html $ftpUsername
+sudo chown nobody:nogroup /var/www
+sudo chmod a-w /var/www
+sudo chown $ftpUsername:$ftpUsername /var/www/html
+
+sudo systemctl restart vsftpd
+
 clear
 echo "******************************************************************"
-echo "Login Docs Server:" https://$eip
+echo "Docs Server:" https://$eip
 echo "Username:" $nginxUsername
 echo "Password:" $passvar1
 echo "******************************************************************"
 echo "SSL cert:" /etc/pki/tls/certs/Sphinx.crt
-echo "Sphinx Docs:" /var/www/project
+echo "Sphinx Docs:" /var/www/html
 echo "Nginx:" /etc/nginx/sites-available/default
+echo "FTP:" /etc/vsftpd.conf
+echo "******************************************************************"
+echo "SFTP Server:" $eip
+echo "Username:" $ftpUsername
+echo "Password:" $ftppass1
 echo "******************************************************************"

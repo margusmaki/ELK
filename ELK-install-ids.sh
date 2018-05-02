@@ -150,15 +150,11 @@ echo "Username:" $nginxUsername
 echo "Password:" $passvar1
 echo "******************************************************************"
 echo "SSL cert:" /etc/pki/tls/certs/ELK-Stack.crt
-echo "Elasticsearch: /etc/elasticsearch/elasticsearch.yml
-echo "Kibana: /etc/kibana/kibana.yml
+echo "******************************************************************"
+echo "SSL cert:" /etc/pki/tls/certs/ELK-Stack.crt
+echo "Elasticsearch:" /etc/elasticsearch/elasticsearch.yml
+echo "Kibana:" /etc/kibana/kibana.yml
 echo "Logstash:" /etc/logstash/logstash.conf
-echo "Logstash:" /etc/logstash/conf.d/02-beats-input.conf
-echo "Logstash:" /etc/logstash/conf.d/10-syslog-filter.conf
-echo "Logstash:" /etc/logstash/conf.d/11-syslog-apache.conf
-echo "Logstash:" /etc/logstash/conf.d/30-elasticsearch-output.conf
-echo "Packetbeat:" /etc/packetbeat/packetbeat.yml
-echo "Metricbeat:" /etc/metricbeat/metricbeat.yml
-echo "Filebeat:" /etc/filebeat/filebeat.yml
+echo "Logstash Wazuh:" /etc/logstash/conf.d/01-wazuh.conf
 echo "Nginx:" /etc/nginx/sites-available/default
 echo "******************************************************************"
