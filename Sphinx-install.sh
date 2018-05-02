@@ -64,7 +64,7 @@ cat <<EOC | sudo su
 cat <<EOT > /etc/nginx/sites-available/default
 server {
         listen 80;
-        server_name 10.104.32.25;
+        server_name $eip;
         return 301 https://\\\$server_name\\\$request_uri;
 }
 server {
